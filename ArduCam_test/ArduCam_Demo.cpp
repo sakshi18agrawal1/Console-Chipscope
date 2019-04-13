@@ -1,7 +1,9 @@
 // ArduCam_test.cpp : Defines the entry point for the console application.
-//
 
-#include "stdafx.h"
+#include <SDKDDKVer.h>
+#include <stdio.h>
+#include <tchar.h>
+
 #include <Windows.h>
 #include "ArduCamlib.h"
 #include <io.h>
@@ -46,13 +48,11 @@ cv::Mat dBytesToMat(Uint8* bytes,int bit_width,int width,int height){
     free(temp_data);
     return image;
 }
-
 cv::Mat BytestoMat(Uint8* bytes, int width, int height)
 {
 	cv::Mat image = cv::Mat(height, width, CV_8UC1, bytes);
 	return image;
 }
-
 cv::Mat ConvertImage(ArduCamOutData* frameData){
 	cv::Mat rawImage ;
 	Uint8* data = frameData->pu8ImageData;
@@ -102,7 +102,6 @@ void configBoard(ArduCamHandle &cameraHandle,cv::FileNode bp){
 		ArduCam_setboardConfig(cameraHandle, u8Command,u16Value,u16Index, u32BufSize, u8Buf);
 	}
 }
-
 void writeSensorRegs(ArduCamHandle &cameraHandle,cv::FileNode rp){
 	std::string hexStr;
 	int value;
@@ -118,7 +117,6 @@ void writeSensorRegs(ArduCamHandle &cameraHandle,cv::FileNode rp){
 		rp[i][1] >> hexStr;
 		Uint32 val = std::stoul(hexStr, nullptr, 16);
 		ArduCam_writeSensorReg(cameraHandle, addr, val);
-		//usleep(1000);
 	}
 }
 
@@ -128,7 +126,7 @@ void writeSensorRegs(ArduCamHandle &cameraHandle,cv::FileNode rp){
  * @param cameraHandle : camera handle
  * @param cameraCfg :camera config struct
  * @return TURE or FALSE
- * */
+ **/
 bool camera_initFromFile(std::string filename, ArduCamHandle &cameraHandle, ArduCamCfg &cameraCfg) {
 	cv::FileStorage cfg;
 	if (cfg.open(filename, cv::FileStorage::READ)) {
@@ -223,7 +221,6 @@ void captureImage_thread(ArduCamHandle handle) {
 	ArduCam_endCaptureImage(handle);
 	std::cout << "Capture thread stopped." << std::endl;
 }
-
 void readImage_thread(ArduCamHandle handle) {
 	ArduCamOutData* frameData;
 	cv::namedWindow("ArduCam", cv::WINDOW_AUTOSIZE);
@@ -358,5 +355,3 @@ int main(int argc,char **argv)
 	std::getline(std::cin,key);
 	return 0;
 }
-
-
